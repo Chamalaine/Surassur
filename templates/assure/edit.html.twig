@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editer Assuré{% endblock %}
+
+{% block body %}
+    <h1>Editer Assuré</h1>
+     {% for message in app.flashes('success') %}
+         <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+    {{ include('assure/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('assure_index') }}">Retour</a>
+
+    {{ include('assure/_delete_form.html.twig') }}
+{% endblock %}

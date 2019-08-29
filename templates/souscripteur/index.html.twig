@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Souscripteurs{% endblock %}
+
+{% block body %}
+    <h1>Tableau des Souscripteurs</h1>
+     {% for message in app.flashes('success') %}
+         <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for souscripteur in souscripteurs %}
+            <tr>
+                <td>{{ souscripteur.nom }}</td>
+                <td>{{ souscripteur.email }}</td>
+                <td>
+                    <a href="{{ path('souscripteur_show', {'id': souscripteur.id}) }}">Détails</a>
+                    <a href="{{ path('souscripteur_edit', {'id': souscripteur.id}) }}">Editer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucuns souscripteurs</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('souscripteur_new') }}">Rajouter un Souscripteur</a>
+{% endblock %}

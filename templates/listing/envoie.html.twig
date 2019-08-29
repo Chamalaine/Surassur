@@ -1,0 +1,43 @@
+
+<h1> {{listing.nom}}</h2>
+<h3> Listing du : {{listing.dateEnvoi ? listing.dateEnvoi|date('d-m-Y') : ''}}</h3>
+<h2> Par {{listing.intermediaire.nom}}</h2>
+
+<table class="table">
+<img src="{{ asset('asset/img/logo.png')}}"/>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Date de Naissance</th>
+                <th>Telephone</th>
+                <th>Numero</th>
+                <th>Libelle</th>
+                <th>Ville</th>
+                <th>Cp</th>
+                <th>Complement</th>
+                <th>Beneficiaires</th>
+
+            </tr>
+        </thead>
+        <tbody>
+          {% for assure in listing.assures %}
+            <tr>
+                <td>{{ assure.nom }}</td>
+                <td>{{ assure.prenom }}</td>
+                <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
+                <td>{{ assure.telephone }}</td>
+                <td>{{ assure.numero }}</td>
+                <td>{{ assure.libelle }}</td>
+                <td>{{ assure.ville }}</td>
+                <td>{{ assure.cp }}</td>
+                <td>{{ assure.complement }}</td>
+                {% for beneficiaire in assure.beneficiaires %}
+                <td>{{ beneficiaire.nom}}  {{beneficiaire.prenom}}
+                    {{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('d-m-Y') : ''}} {{beneficiaire.relation}} 
+                <td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>

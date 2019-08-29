@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listing index{% endblock %}
+
+{% block body %}
+    <h1>Listing index</h1>
+
+      {% for message in app.flashes('success') %}
+         <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date Creation</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for listing in listings %}
+            <tr>
+                <td>{{ listing.nom }}</td>
+                <td>{{ listing.dateCreation ? listing.dateCreation|date('d-m-Y') : '' }}</td>
+                <td>
+                    <a href="{{ path('listing_show', {'id': listing.id}) }}">Afficher</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucuns Listings</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('listing_new') }}">Créer un Listing</a>
+{% endblock %}

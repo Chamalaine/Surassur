@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Listing{% endblock %}
+
+{% block body %}
+    <h1>Création de Listing</h1>
+
+    {{ include('listing/_form.html.twig') }}
+
+    <a href="{{ path('listing_index') }}">Retour</a>
+{% endblock %}

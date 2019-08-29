@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assure{% endblock %}
+
+{% block body %}
+    <h1>Assure</h1>
+     {% for message in app.flashes('success') %}
+         <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ assure.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ assure.prenom }}</td>
+
+            </tr>
+            <tr>
+                <th>DateNaissance</th>
+                <td>{{ assure.dateNaissance ? assure.dateNaissance|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Telephone</th>
+                <td>{{ assure.telephone }}</td>
+            </tr>
+            <tr>
+                <th>Numero</th>
+                <td>{{ assure.numero }}</td>
+            </tr>
+            <tr>
+                <th>Libelle</th>
+                <td>{{ assure.libelle }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ assure.ville }}</td>
+            </tr>
+            <tr>
+                <th>Cp</th>
+                <td>{{ assure.cp }}</td>
+            </tr>
+            <tr>
+                <th>Complement</th>
+                <td>{{ assure.complement }}</td>
+            </tr>
+
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de Naissance</th>
+                <th>Relation<th>
+
+            </tr>
+
+                {% for beneficiaire in assure.beneficiaires %}
+                <tr>
+                <td>{{ beneficiaire.nom }}</td>
+                <td>{{ beneficiaire.prenom }}</td>
+                <td>{{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('d-m-Y') : ''  }}</td>
+                <td>{{ beneficiaire.relation }}</td>
+                </tr>
+                {% endfor %}
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('assure_index') }}">back to list</a>
+
+    <a class="btn btn-outline-success my-2 my-sm-0" href="{{ path('beneficiaire_ajout', {'id': assure.id}) }}">Ajouter un Bénéficiaire</a>
+
+    <a href="{{ path('assure_edit', {'id': assure.id}) }}">edit</a>
+
+    {{ include('assure/_delete_form.html.twig') }}
+{% endblock %}

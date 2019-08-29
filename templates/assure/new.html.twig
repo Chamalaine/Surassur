@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel assuré{% endblock %}
+
+
+{% block body %}
+    <h1>Créer un nouvel assuré</h1>
+
+
+    {{ include('assure/_form.html.twig') }}
+
+    <a href="{{ path('assure_index') }}">Retour</a>
+{% endblock %}

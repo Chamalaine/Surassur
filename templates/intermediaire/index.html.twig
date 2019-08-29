@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Intermediaire index{% endblock %}
+
+{% block body %}
+    <h1>Intermediaire index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Nom</th>
+                <th>Date de Creation</th>
+                <th>SIRET</th>
+                <th>Numero</th>
+                <th>Libelle</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for intermediaire in intermediaires %}
+            <tr>
+                <td>{{ intermediaire.email }}</td>
+                <td>{{ intermediaire.nom }}</td>
+                <td>{{ intermediaire.dateCreation ? intermediaire.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ intermediaire.SIRET }}</td>
+                <td>{{ intermediaire.numero }}</td>
+                <td>{{ intermediaire.libelle }}</td>
+                <td>{{ intermediaire.cp }}</td>
+                <td>{{ intermediaire.ville }}</td>
+                <td>
+                    <a href="{{ path('intermediaire_show', {'id': intermediaire.id}) }}">show</a>
+                    <a href="{{ path('intermediaire_edit', {'id': intermediaire.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}

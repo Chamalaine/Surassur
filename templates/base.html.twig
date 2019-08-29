@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ asset('asset/css/style.css')}}"> 
+        <title>{% block title %}Surassur{% endblock %}</title>
+        {% block stylesheets %}
+           
+        {% endblock %}
+    </head>
+    <body>
+    <div class="container" style="border: 1px solid #E0D564" >
+    <nav class="navbar navbar-light" style="background-color: #3D7373;">
+        <a href="{{ path('Home') }}" class="navbar-brand"style="color:#E0D564"  > Accueil<a>
+        {% if app.user %}
+        <a href="{{ path('souscripteur_index') }}" class="navbar-brand"style="color:#E0D564"  > Afficher Souscripteur<a>
+        <a href="{{ path('listing_index') }}" class="navbar-brand" style="color:#E0D564" > Afficher Listing<a>
+        <a href="{{ path('assure_index') }}" class="navbar-brand" style="color:#E0D564" > Afficher Assure<a>
+        <br>
+        <div class="checkbox mb-3">{{ app.user.nom }}</a>
+        <a href="{{ path('intermediaire_show', {'id': app.user.id})}}"> Profil</a>
+        <a href="{{ path('app_logout') }}" class="nav-link"> Deconnexion<a>
+        {% else %}
+        <a href="{{ path('app_login') }}" class="nav-link"> Connexion<a>
+        <a href="{{ path('app_register') }}" class="nav-link"> Inscription<a>
+        {% endif %}
+</nav>
+         {% for message in app.flashes('success') %}
+         <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+         <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <img src="{{ asset('asset/img/logo.png')}}" id="logo"/>
+
+        {% block body %}
+       
+        
+
+        {% endblock %}
+        <footer class="footer-copyright text-center py-3">
+            {% block footer %}
+                <p>Surassur © Soufi Chamalaine - Association Multiculturelle</p>
+            {% endblock %}
+            </footer>
+        {% block javascripts %}{% endblock %}
+        </div>
+    </body>
+
+    
+</html>
+

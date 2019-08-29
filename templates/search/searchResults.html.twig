@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recherche assure{% endblock %}
+
+{% block body %}
+    <h1>Recherche assure</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>DateNaissance</th>
+                <th>Telephone</th>
+                <th>StatutBeneficiaire</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for assure in assures %}
+            <tr>
+                <td>{{ assure.nom }}</td>
+                <td>{{ assure.prenom }}</td>
+                <td>{{ assure.dateNaissance ? assure.dateNaissance|date('Y-m-d') : '' }}</td>
+                <td>{{ assure.telephone }}</td>
+                <td>
+                    <a href="{{ path('assure_show', {'id': assure.id}) }}">show</a>
+                    <a href="{{ path('assure_edit', {'id': assure.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">Pas de résultats</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

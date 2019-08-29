@@ -1,0 +1,12 @@
+#logo{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#acceuil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  justify-content: center;
+}

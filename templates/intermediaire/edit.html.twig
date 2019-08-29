@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Intermediaire{% endblock %}
+
+{% block body %}
+
+
+    <h1>Edit Intermediaire</h1>
+
+    {{ include('intermediaire/_form.html.twig', {'button_label': 'Update'}) }}
+
+
+    <a href="{{ path('intermediaire_index') }}">back to list</a>
+
+    {{ include('intermediaire/_delete_form.html.twig') }}
+{% endblock %}

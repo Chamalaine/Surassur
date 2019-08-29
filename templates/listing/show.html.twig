@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listing{% endblock %}
+
+{% block body %}
+    <h1>Listing</h1>
+
+
+
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Nom</th>
+                <td>{{ listing.nom }}</td>
+            </tr>
+
+             <tr>
+                <th>Souscripteur</th>
+                <td>{{ listing.souscripteur.nom }}</td>
+            </tr>
+
+
+            <tr>
+                <th>DateCreation</th>
+                <td>{{ listing.dateCreation ? listing.dateCreation|date('d-m-Y') : '' }}</td>
+            </tr>
+
+            <tr>
+                <th>Date d'Envoi</th>
+                <td>{{ listing.dateEnvoi ? listing.dateCreation|date('d-m-Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nombre d'assurés</th>
+                <td>{{ nb }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de Naissance</th>
+                <th>Numéro<th>
+                <th>Libellé<th>
+                <th>Code Postal<th>
+                <th>Ville<th>
+                <th>Téléphone<th>
+            </tr>
+
+                {% for assure in listing.assures %}<tr>
+                <td>{{ assure.nom }}</td>
+                <td>{{ assure.prenom }}</td>
+                <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
+                <td>{{ assure.numero }}</td>
+                <td>{{ assure.libelle }}</td>
+                <td>{{ assure.cp }}</td>
+                <td>{{ assure.ville }}</td>
+                <td>{{ assure.telephone }}</td></tr>
+                
+                {% endfor %}
+
+
+            
+        </tbody>
+    </table>
+
+
+    <br>
+    <a class="btn btn-outline-success my-2 my-sm-0" href="{{ path('assure_ajout', {'id': listing.id}) }}">Ajouter Assuré</a>
+    <br>
+    <a class = "btn-info " href="{{path('listing_pdf', {'id': listing.id})}}">PDF</a>
+
+    <br>
+    <a class = "btn-info "  href="{{path('listing_envoyer', {'id': listing.id})}}">Envoyer le Listing</a>
+    <br>
+    <a class = "btn-info "href="{{ path('listing_edit', {'id': listing.id}) }}">Editer</a>
+    <br>
+    <a class="btn-warning" href="{{ path('listing_index') }}">Retour</a>
+
+    {{ include('listing/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Intermediaire{% endblock %}
+
+{% block body %}
+    <h1>Intermediaire</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Email</th>
+                <td>{{ intermediaire.email }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ intermediaire.nom }}</td>
+            </tr>
+            <tr>
+                <th>DateCreation</th>
+                <td>{{ intermediaire.dateCreation ? intermediaire.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>SIRET</th>
+                <td>{{ intermediaire.SIRET }}</td>
+            </tr>
+            <tr>
+                <th>Numero</th>
+                <td>{{ intermediaire.numero }}</td>
+            </tr>
+
+            <tr>
+                <th>Libellé</th>
+                <td>{{ intermediaire.libelle }}</td>
+            </tr>
+
+            <tr>
+                <th>Cp</th>
+                <td>{{ intermediaire.cp }}</td>
+            </tr>
+            <tr>
+                <th>Ville</th>
+                <td>{{ intermediaire.ville }}</td>
+            </tr>
+
+             <tr>
+                <th>Souscripteurs</th>
+                {% for souscripteur in intermediaire.souscripteurs  %}
+                <td>{{ souscripteur.nom }}</td>
+                {% endfor %}
+            </tr>
+                <tr>
+                <th>Nom</th>
+                <th>Souscripteur<th>
+                <th>Date de création</th>
+                <th>Date d'envoi<th>
+            </tr>
+
+                {% for listing in intermediaire.listings  %}
+                <tr>
+                <td>{{  listing.nom }}</td>
+                <td>{{  listing.Souscripteur.nom }}</td>
+                <td>{{  listing.dateCreation ? listing.dateCreation|date('d-m-Y') : ''  }}</td>
+                <td>{{  listing.dateEnvoi ? listing.dateEnvoi|date('d-m-Y') : ''  }}</td>
+                </tr>
+                {% endfor %}
+
+
+        </tbody>
+    </table>
+
+    <a href="{{ path('intermediaire_index') }}">back to list</a>
+    <a href="{{ path('change_password') }}">Modifier mot de passe</a>
+    <a href="{{ path('intermediaire_edit', {'id': intermediaire.id}) }}">Editer</a>
+
+    {{ include('intermediaire/_delete_form.html.twig') }}
+{% endblock %}

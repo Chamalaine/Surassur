@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Beneficiaire{% endblock %}
+
+{% block body %}
+    <h1>Beneficiaire</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ beneficiaire.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ beneficiaire.nom }}</td>
+            </tr>
+            <tr>
+                <th>Prenom</th>
+                <td>{{ beneficiaire.prenom }}</td>
+            </tr>
+            <tr>
+                <th>DateNaissance</th>
+                <td>{{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Relation</th>
+                <td>{{ beneficiaire.relation }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('beneficiaire_index') }}">back to list</a>
+
+    <a href="{{ path('beneficiaire_edit', {'id': beneficiaire.id}) }}">edit</a>
+
+    {{ include('beneficiaire/_delete_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assure index{% endblock %}
+
+{% block body %}
+    <h1>Assure index</h1>
+    
+     {% for message in app.flashes('success') %}
+         <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Date de Naissance</th>
+                <th>Telephone</th>
+                <th>Numero</th>
+                <th>Libelle</th>
+                <th>Ville</th>
+                <th>Cp</th>
+                <th>Complement</th>
+                <th>Beneficiaires</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for assure in assures %}
+            <tr>
+                <td>{{ assure.nom }}</td>
+                <td>{{ assure.prenom }}</td>
+                <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
+                <td>{{ assure.telephone }}</td>
+                <td>{{ assure.numero }}</td>
+                <td>{{ assure.libelle }}</td>
+                <td>{{ assure.ville }}</td>
+                <td>{{ assure.cp }}</td>
+                <td>{{ assure.complement }}</td>
+                {% for beneficiaire in assure.beneficiaires %}
+                <td>{{ beneficiaire.nom}}  {{beneficiaire.prenom}}
+                    {{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('d-m-Y') : ''}} {{beneficiaire.relation}}
+                <td>
+                {% endfor %}
+                <td>
+                    <a href="{{ path('assure_show', {'id': assure.id}) }}">Détails</a>
+                    <a href="{{ path('assure_edit', {'id': assure.id}) }}">Editer</a>      
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">Aucun assuré</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('assure_new') }}">Créer un assuré</a>
+{% endblock %}
