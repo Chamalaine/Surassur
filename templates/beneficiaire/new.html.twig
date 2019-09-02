@@ -1,11 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Beneficiaire{% endblock %}
+{% block title %}Nouveau Bénéficiaire{% endblock %}
 
 {% block body %}
-    <h1>Create new Beneficiaire</h1>
+    <h1>Ajouter un Bénéficiaire</h1>
 
     {{ include('beneficiaire/_form.html.twig') }}
-
-    <a href="{{ path('beneficiaire_index') }}">back to list</a>
+    <input type="button" value="page précédente" onclick="javascript:history.back()">
 {% endblock %}

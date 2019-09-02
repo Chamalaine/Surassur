@@ -2,18 +2,22 @@
 
 namespace App\Controller;
 
-use App\Repository\ListingRepository;
-use App\Entity\Listing;
 use App\Entity\Assure;
+use App\Entity\Listing;
 use App\Form\AssureType;
+use App\Entity\Beneficiaire;
+use App\Form\BeneficiaireType;
+use App\Form\NBeneficiaireType;
 use App\Repository\AssureRepository;
+use App\Repository\ListingRepository;
+use App\Entity\BeneficiaireRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 
 
@@ -40,7 +44,7 @@ class AssureController extends AbstractController
     /**
      * @Route("/new", name="assure_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function newAssure(Request $request): Response
     {   
 
         $assure = new Assure();
@@ -67,7 +71,7 @@ class AssureController extends AbstractController
     /**
      * @Route("/{id}", name="assure_show", methods={"GET"})
      */
-    public function show(Assure $assure): Response
+    public function showAssure(Assure $assure): Response
     {
         return $this->render('assure/show.html.twig', [
             'assure' => $assure,
@@ -77,7 +81,7 @@ class AssureController extends AbstractController
     /**
      * @Route("/{id}/edit", name="assure_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Assure $assure): Response
+    public function editAssure(Request $request, Assure $assure): Response
     {
         $form = $this->createForm(assureType::class, $assure);
         $form->handleRequest($request);
@@ -101,7 +105,7 @@ class AssureController extends AbstractController
     /**
      * @Route("/{id}/delete", name="assure_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Assure $assure): Response
+    public function deleteAssure(Request $request, Assure $assure): Response
     {
         if ($this->isCsrfTokenValid('delete'.$assure->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -155,7 +159,7 @@ class AssureController extends AbstractController
      /**
      * @Route("/{id}/ajout", name="assure_ajout", methods={"GET","POST"})
      */
-    public function ajouterAssure(request $request, ListingRepository $listingRepository, $id):Response
+    public function addAssure(request $request, ListingRepository $listingRepository, $id):Response
     {
         {   
             /* Ajout d'assuré */
@@ -176,7 +180,7 @@ class AssureController extends AbstractController
                 $entityManager->persist($assure);
                 }
                 else{
-                /* Si l'assuré est déjà présent, alors on ajoute on ajoute le listing présent dans la table de l'assuré */
+                /* Si l'assuré est déjà présent, alors on ajoute le listing présent dans la table de l'assuré */
                 $doublon->addListing($listing);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($doublon);
@@ -191,11 +195,7 @@ class AssureController extends AbstractController
                     $id=$assure->getId();
 
                     return $this->redirectToRoute('beneficiaire_ajout',array('id'=>$id));
-
-
-
                 }
-
 
                 return $this->redirectToRoute('assure_ajout',array('id'=>$id));
 
@@ -207,4 +207,110 @@ class AssureController extends AbstractController
             ]);
         }
     }
+
+
+            /**
+             * @Route("/{id}/new", name="beneficiaire_new", methods={"GET","POST"})
+             */
+            public function newBeneficiaire(Request $request, AssureRepository $assureRepository, $id): Response
+            {
+                $beneficiaire = new Beneficiaire();
+                $form = $this->createForm(NBeneficiaireType::class, $beneficiaire);
+                $form->handleRequest($request);
+                $assureRepository = $this->getDoctrine()->getRepository(Assure::class);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $assure=$assureRepository->find($id);
+                    $beneficiaire->setAssure($assure);
+                    $entityManager->persist($beneficiaire);
+                    $entityManager->flush();
+
+                    return $this->redirectToRoute('assure_show',array('id'=>$id));
+                }
+
+                return $this->render('beneficiaire/new.html.twig', [
+                    'beneficiaire' => $beneficiaire,
+                    'assure.id' => $id,
+                    'form' => $form->createView(),
+                ]);
+            }
+
+
+            /**
+             * @Route("/{id}/edit", name="beneficiaire_edit", methods={"GET","POST"})
+             */
+            public function editBeneficiaire(Request $request, Beneficiaire $beneficiaire): Response
+            {
+                $form = $this->createForm(BeneficiaireType::class, $beneficiaire);
+                $form->handleRequest($request);
+
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $this->getDoctrine()->getManager()->flush();
+
+                    return $this->redirectToRoute('assure_show',array('id'=>$id));
+                }
+
+                return $this->render('beneficiaire/edit.html.twig', [
+                    'beneficiaire' => $beneficiaire,
+                    'form' => $form->createView(),
+                ]);
+            }
+
+            /**
+             * @Route("/{id}", name="beneficiaire_delete", methods={"DELETE"})
+             */
+            public function deleteBeneficiaire(Request $request, Beneficiaire $beneficiaire): Response
+            {
+                if ($this->isCsrfTokenValid('delete'.$beneficiaire->getId(), $request->request->get('_token'))) {
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $id=$beneficiare->getassure();
+                    $entityManager->remove($beneficiaire);
+                    $entityManager->flush();
+                    
+                }
+
+                return $this->redirectToRoute('assure_show',array('id'=>$id) );
+            }
+
+
+            /**
+             * @Route("/{id}/ajout", name="beneficiaire_ajout", methods={"GET","POST"})
+             */
+            public function ajouterBeneficiaire(request $request, AssureRepository $assureRepository, $id):Response
+            {
+                {   
+                    $assureRepository = $this->getDoctrine()->getRepository(Assure::class);
+                    $beneficiaire = new beneficiaire();
+                    $form = $this->createForm(BeneficiaireType::class, $beneficiaire);
+                    $form->handleRequest($request);
+            
+                    if ($form->isSubmitted() && $form->isValid()){
+                        $assure=$assureRepository->find($id);
+                        $beneficiaire->setAssure($assure);
+                        $entityManager = $this->getDoctrine()->getManager();
+                        $entityManager->persist($beneficiaire);
+                        $entityManager->flush();
+
+                        if ($form->getClickedButton() && 'assure' === $form->getClickedButton()->getName()) {
+                            
+                            $listing =$assure->getListings()->last();
+                            $id=$listing->getId();
+                            
+
+                            return $this->redirectToRoute('assure_ajout',array('id'=>$id));
+                        }
+            
+                        return $this->redirectToRoute('beneficiaire_ajout',array('id'=>$id) );
+                    }
+            
+                    return $this->render('beneficiaire/new.html.twig', [
+
+                        'beneficiaire' => $beneficiaire,
+                        'form' => $form->createView(),
+                    ]);
+                }
+            }
+
+    
 }

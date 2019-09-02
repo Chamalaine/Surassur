@@ -28,7 +28,7 @@ class SouscripteurController extends AbstractController
     /**
      * @Route("/new", name="souscripteur_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function newSouscripteur(Request $request): Response
     {
         $souscripteur = new Souscripteur();
         $form = $this->createForm(SouscripteurType::class, $souscripteur);
@@ -53,7 +53,7 @@ class SouscripteurController extends AbstractController
     /**
      * @Route("/{id}", name="souscripteur_show", methods={"GET"})
      */
-    public function show(Souscripteur $souscripteur): Response
+    public function showSouscripteur(Souscripteur $souscripteur): Response
     {
         return $this->render('souscripteur/show.html.twig', [
             'souscripteur' => $souscripteur,
@@ -63,7 +63,7 @@ class SouscripteurController extends AbstractController
     /**
      * @Route("/{id}/edit", name="souscripteur_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Souscripteur $souscripteur): Response
+    public function editSouscripteur(Request $request, Souscripteur $souscripteur): Response
     {
         $form = $this->createForm(SouscripteurType::class, $souscripteur);
         $form->handleRequest($request);
@@ -87,7 +87,7 @@ class SouscripteurController extends AbstractController
     /**
      * @Route("/{id}", name="souscripteur_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Souscripteur $souscripteur): Response
+    public function deleteSouscripteur(Request $request, Souscripteur $souscripteur): Response
     {
         if ($this->isCsrfTokenValid('delete'.$souscripteur->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();

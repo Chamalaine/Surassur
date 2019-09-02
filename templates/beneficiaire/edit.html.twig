@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Beneficiaire{% endblock %}
+{% block title %}Editer Beneficiaire{% endblock %}
 
 {% block body %}
-    <h1>Edit Beneficiaire</h1>
+    <h1>Editer Beneficiaire</h1>
 
     {{ include('beneficiaire/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('beneficiaire_index') }}">back to list</a>
+    <a href="{{ path('beneficiaire_index') }}">Retour</a>
 
     {{ include('beneficiaire/_delete_form.html.twig') }}
 {% endblock %}

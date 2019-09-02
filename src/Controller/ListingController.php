@@ -24,15 +24,17 @@ class ListingController extends AbstractController
     public function index(ListingRepository $listingRepository): Response
     {
         $id = $this->getUser()->getId();
+        $listings = $listingRepository->findByIntermediaire($id);
+        
         return $this->render('listing/index.html.twig', [
-            'listings' => $listingRepository->findByIntermediaire($id),
+            'listings' => $listings,
         ]);
     }
 
     /**
      * @Route("/new", name="listing_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function newListing(Request $request): Response
     {
         $listing = new Listing();
         $form = $this->createForm(ListingType::class, $listing);
@@ -59,7 +61,7 @@ class ListingController extends AbstractController
     /**
      * @Route("/{id}", name="listing_show", methods={"GET"})
      */
-    public function show(Listing $listing): Response
+    public function showListing(Listing $listing): Response
     {
         $tab = $listing->getassures();
         $nb = count($tab);
@@ -72,7 +74,7 @@ class ListingController extends AbstractController
     /**
      * @Route("/{id}/edit", name="listing_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Listing $listing): Response
+    public function editListing(Request $request, Listing $listing): Response
     {
         $form = $this->createForm(ListingType::class, $listing);
         $form->handleRequest($request);
@@ -98,7 +100,7 @@ class ListingController extends AbstractController
     /**
      * @Route("/{id}", name="listing_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, Listing $listing): Response
+    public function deleteListing(Request $request, Listing $listing): Response
     {
         if ($this->isCsrfTokenValid('delete'.$listing->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -142,17 +144,19 @@ class ListingController extends AbstractController
      */
     public function sendListing(Listing $listing, \Swift_Mailer $mailer)
     {
-
         /* Envoie de Listing par mail à l'aide de SwiftMailer */
+        /* Insertion de la date d'envoi du listing dans la base de donnée */
         $listing->setDateEnvoi(new \DateTime());
         $tab = $listing->getassures();
         $nb = count($tab);
         $message = (new \Swift_Message($listing->getNom()))
+            /* Adresse mail d'envoi */
             ->setFrom('surassur.amc@gmail.com')
+            /* Adresse mail cible, récupéré dans la base de donnée */
             ->setTo($listing->getSouscripteur()->getEmail())
             ->setBody(
                 $this->renderView(
-  
+                    /* Modèle twig du mail qui va être envoyé*/
                     'listing/envoie.html.twig',
                     ['listing' => $listing,
                     'nb' => $nb,]
@@ -160,11 +164,13 @@ class ListingController extends AbstractController
                 'text/html'
             )
         ;
-    
+        /* Envoie du mail */
         $mailer->send($message);
-
+        
+         /* Message d'Alerte */
         $this->addFlash('success','Listing envoyé avec succes');
-    
+                
+        /* Retour vers les informations du listing */
         return $this->render('listing/show.html.twig', [
             'listing' => $listing,
             'nb' => $nb,
