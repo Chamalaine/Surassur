@@ -15,6 +15,7 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Form\ChangePasswordType;
+use App\Form\ForgottenPasswordType;
 
 
 
@@ -87,46 +88,19 @@ class SecurityController extends AbstractController
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 
+
+      /**
+      * @Route("/forgottenPassword", name="forgotten_password")
+      */
+      public function forgottenPassword(Request $request)
+      {
+        return $this->render('security/forgotten_password.html.twig');
+      }
+
+
         /**
-        * @Route("/password", name="reset_password")
+        * @Route("/password", name="change_password")
         */
-        public function resetPassword(Request $request)
-        {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-        $form = $this->createForm(ChangePasswordType::class, $user);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-        $passwordEncoder = $this->get('security.password_encoder');
-        dump($request->request);die();
-        $oldPassword = $request->request->get('change_password')['oldPassword'];
-
-        // Si l'ancien mot de passe est bon
-        if ($passwordEncoder->isPasswordValid($user, $oldPassword)) {
-        
-        $newEncodedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
-        $user->setPassword($newEncodedPassword);
-
-        $em->persist($user);
-        $em->flush();
-
-        $this->addFlash('notice', 'Votre mot de passe à bien été changé !');
- 
-        return $this->render('home\index.html.twig');
-        } else {
-        $form->addError(new FormError('Ancien mot de passe incorrect'));
-        }
-        }
-
-        return $this->render("home/index.html.twig"); 
-        
-        }
-
-        /**
-         * @Route("/changepassword", name="change_password")
-         */
         public function changePassword(Request $request)
         {
             $em = $this->getDoctrine()->getManager();
@@ -134,34 +108,30 @@ class SecurityController extends AbstractController
             $form = $this->createForm(ChangePasswordType::class, $user);
 
             $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()){
-                $encoded= $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('oldPassword')->getData());
+            if ($form->isSubmitted() && $form->isValid()) {
 
-                $old=$user->getpassword();
-                    
-                if($encoded=$old){
-                    $user->setPassword(
-                        $passwordEncoder->encodePassword(
-                            $user,
-                            $form->get('Password')->getData()
-                        ));
+                $passwordEncoder = $this->get('security.password_encoder');
+                $oldPassword = $request->request->get('change_password')['oldPassword'];
 
-                        $entityManager = $this->getDoctrine()->getManager();
-                        $entityManager->persist($user);
-                        $entityManager->flush();
-            
-                        $this->addFlash('success','Mot de passe modifié');
+                // Si l'ancien mot de passe est bon
+                if ($passwordEncoder->isPasswordValid($user, $oldPassword)) {
+                
+                $newEncodedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
+                $user->setPassword($newEncodedPassword);
+                $em->persist($user);
+                $em->flush();
 
-                        return $this->render("home/index.html.twig"); 
-
+                $this->addFlash('notice', 'Votre mot de passe à bien été changé !');
+        
+                return $this->render('home\index.html.twig');
+                } 
+                else {
+                    $form->addError(new FormError('Ancien mot de passe incorrect'));
                 }
-                return $this->render("home/index.html.twig"); 
-            }
-            return $this->render('security/reset_password.html.twig', [
-                'ChangePasswordType' => $form->createView(),
-            ]);
+        }
+
+        return $this->render("home/index.html.twig"); 
+        
         }
 
     }

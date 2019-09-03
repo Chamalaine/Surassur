@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Assure index{% endblock %}
+{% block title %}Liste Assurés{% endblock %}
 
 {% block body %}
-    <h1>Assure index</h1>
+    <h1>Liste Assurés</h1>
     
      {% for message in app.flashes('success') %}
          <div class="alert alert-success">
@@ -56,6 +56,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('assure_new') }}">Créer un assuré</a>
 {% endblock %}

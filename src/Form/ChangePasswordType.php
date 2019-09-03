@@ -13,30 +13,27 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ChangePasswordType extends AbstractType
 {
-public function buildForm(FormBuilderInterface $builder, array $options)
- {
-$builder
-->add('oldPassword', PasswordType::class, array(
-'mapped' => false
-))
- ->add('Password', RepeatedType::class, array(
-'type' => PasswordType::class,
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+    $builder
+            ->add('oldPassword', PasswordType::class, array(
+            'mapped' => false
+            ))
+            ->add('Password', RepeatedType::class, array(
+            'type' => PasswordType::class,
+            ))
 
-))
+            ->add('submit', SubmitType::class, array(
+            'attr' => array(
+            'class' => 'btn btn-primary btn-block'
+                )));
 
- ->add('submit', SubmitType::class, array(
-'attr' => array(
-'class' => 'btn btn-primary btn-block'
-)
- ))
-;
+    }
 
-}
-
-public function configureOptions(OptionsResolver $resolver)
- {
-$resolver->setDefaults([
-'data_class' => Intermediaire::class,
-]);
-}
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+                    'data_class' => Intermediaire::class,
+                    ]);
+    }
 }

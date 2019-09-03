@@ -7,7 +7,7 @@ use App\Entity\Listing;
 use App\Form\AssureType;
 use App\Entity\Beneficiaire;
 use App\Form\BeneficiaireType;
-use App\Form\NBeneficiaireType;
+use App\Form\NewBeneficiaireType;
 use App\Repository\AssureRepository;
 use App\Repository\ListingRepository;
 use App\Entity\BeneficiaireRepository;
@@ -215,7 +215,7 @@ class AssureController extends AbstractController
             public function newBeneficiaire(Request $request, AssureRepository $assureRepository, $id): Response
             {
                 $beneficiaire = new Beneficiaire();
-                $form = $this->createForm(NBeneficiaireType::class, $beneficiaire);
+                $form = $this->createForm(NewBeneficiaireType::class, $beneficiaire);
                 $form->handleRequest($request);
                 $assureRepository = $this->getDoctrine()->getRepository(Assure::class);
 

@@ -124,15 +124,14 @@ class ListingController extends AbstractController
         $dompdf = new Dompdf();
 
         $html = $this->renderView(
-            // templates/emails/registration.html.twig
-            'listing/envoie.html.twig',
+            'listing/pdf.html.twig',
             ['listing' => $listing]);
         $dompdf->loadHtml($html);
 
-        // (Optional) Setup the paper size and orientation
+        // Orientation du PDF, ici en paysage et format A4
         $dompdf->setPaper('A4', 'landscape');
 
-        // Render the HTML as PDF
+        // Conversion de l'HTML en PDF
         $dompdf->render();
 
         // Output the generated PDF to Browser
