@@ -28,7 +28,7 @@
 
             <tr>
                 <th>Date d'Envoi</th>
-                <td>{{ listing.dateEnvoi ? listing.dateCreation|date('d-m-Y') : '' }}</td>
+                <td>{{ listing.dateEnvoi ? listing.dateEnvoi|date('d-m-Y') : '' }}</td>
             </tr>
             <tr>
                 <th>Nombre d'assurés</th>
@@ -38,22 +38,14 @@
                 <th>Nom</th>
                 <th>Prénom</th>
                 <th>Date de Naissance</th>
-                <th>Numéro<th>
-                <th>Libellé<th>
-                <th>Code Postal<th>
-                <th>Ville<th>
-                <th>Téléphone<th>
             </tr>
 
                 {% for assure in listing.assures %}<tr>
                 <td>{{ assure.nom }}</td>
                 <td>{{ assure.prenom }}</td>
                 <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
-                <td>{{ assure.numero }}</td>
-                <td>{{ assure.libelle }}</td>
-                <td>{{ assure.cp }}</td>
-                <td>{{ assure.ville }}</td>
-                <td>{{ assure.telephone }}</td></tr>
+                <td><a href="{{ path('assure_show', {'id': assure.id}) }}">Détails</a></td>
+                </tr>
                 
                 {% endfor %}
 
@@ -70,6 +62,8 @@
 
     <br>
     <a class = "btn-info "  href="{{path('listing_envoyer', {'id': listing.id})}}">Envoyer le Listing</a>
+    <br>
+    <a class = "btn-info "  href="{{ path('excel') }}">Générer tableau</a>
     <br>
     <a class = "btn-info "href="{{ path('listing_edit', {'id': listing.id}) }}">Editer</a>
     <br>

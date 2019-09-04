@@ -76,7 +76,7 @@ class IntermediaireController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('intermediaire_index');
+        return $this->redirectToRoute('Home');
     }
 
 

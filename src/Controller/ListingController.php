@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use Swiftmailer\Swiftmailer;
 use Dompdf\Dompdf;
-use App\Entity\Souscripteur;
 use App\Entity\Listing;
 use App\Form\ListingType;
+use App\Entity\Souscripteur;
+use Swiftmailer\Swiftmailer;
 use App\Repository\ListingRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/profile/listing")
@@ -134,7 +135,7 @@ class ListingController extends AbstractController
         // Conversion de l'HTML en PDF
         $dompdf->render();
 
-        // Output the generated PDF to Browser
+        // Renvoi du PDF sur le navigateur 
         return $dompdf->stream($listing->getNom().".pdf");
     }
 
@@ -175,6 +176,33 @@ class ListingController extends AbstractController
             'nb' => $nb,
         ]);
     }
+
+             /**
+             * @Route("/excel", name="excel",  methods={"GET"})
+             */
+            public function excel()
+            {
+                $spreadsheet = new Spreadsheet();
+                
+                /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
+                $sheet = $spreadsheet->getActiveSheet();
+                $sheet->setCellValue('A1', 'Hello World !');
+                $sheet->setTitle("My First Worksheet");
+                
+                // Create your Office 2007 Excel (XLSX Format)
+                $writer = new Xlsx($spreadsheet);
+                
+                // In this case, we want to write the file in the public directory
+                $publicDirectory = $this->get('kernel')->getProjectDir() . '/public';
+                // e.g /var/www/project/public/my_first_excel_symfony4.xlsx
+                $excelFilepath =  $publicDirectory . '/my_first_excel_symfony4.xlsx';
+                
+                // Create the file
+                $writer->save($excelFilepath);
+                
+                // Return a text response to the browser saying that the excel was succesfully created
+                return new Response("Excel generated succesfully");
+            }
 
    
 }

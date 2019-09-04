@@ -84,6 +84,9 @@ class Intermediaire implements UserInterface
      */
     private $ville;
 
+    
+ 
+
 
 
  
@@ -336,6 +339,8 @@ class Intermediaire implements UserInterface
 
         return $this;
     }
+ 
+
 
 
 

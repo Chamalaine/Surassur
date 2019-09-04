@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Assure;
 use App\Entity\Listing;
 use App\Form\AssureType;
+use App\Form\NewAssureType;
 use App\Entity\Beneficiaire;
 use App\Form\BeneficiaireType;
 use App\Form\NewBeneficiaireType;
@@ -42,33 +43,6 @@ class AssureController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="assure_new", methods={"GET","POST"})
-     */
-    public function newAssure(Request $request): Response
-    {   
-
-        $assure = new Assure();
-        $form = $this->createForm(AssureType::class, $assure);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $assure->setIntermediaire($this->getUser());
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($assure);
-            $entityManager->flush();
-
-            $this->addFlash('success','Assuré ajouté avec succes');
-
-            return $this->redirectToRoute('assure_index');
-        }
-
-        return $this->render('assure/new.html.twig', [
-            'assure' => $assure,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/{id}", name="assure_show", methods={"GET"})
      */
     public function showAssure(Assure $assure): Response
@@ -83,7 +57,7 @@ class AssureController extends AbstractController
      */
     public function editAssure(Request $request, Assure $assure): Response
     {
-        $form = $this->createForm(assureType::class, $assure);
+        $form = $this->createForm(NewAssureType::class, $assure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -193,7 +167,6 @@ class AssureController extends AbstractController
                 if ($form->getClickedButton() && 'beneficiaire' === $form->getClickedButton()->getName()) {
 
                     $id=$assure->getId();
-
                     return $this->redirectToRoute('beneficiaire_ajout',array('id'=>$id));
                 }
 
@@ -226,7 +199,7 @@ class AssureController extends AbstractController
                     $entityManager->persist($beneficiaire);
                     $entityManager->flush();
 
-                    return $this->redirectToRoute('assure_show',array('id'=>$id));
+                    return $this->redirectToRoute('beneficiaire_new',array('id'=>$id));
                 }
 
                 return $this->render('beneficiaire/new.html.twig', [
@@ -264,7 +237,7 @@ class AssureController extends AbstractController
             {
                 if ($this->isCsrfTokenValid('delete'.$beneficiaire->getId(), $request->request->get('_token'))) {
                     $entityManager = $this->getDoctrine()->getManager();
-                    $id=$beneficiare->getassure();
+                    $id=$beneficiaire->getassure();
                     $entityManager->remove($beneficiaire);
                     $entityManager->flush();
                     

@@ -3,19 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Intermediaire;
+use App\Form\ChangePasswordType;
 use App\Form\RegistrationFormType;
+use App\Form\ForgottenPasswordType;
 use App\Security\LoginAuthenticator;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use App\Form\ChangePasswordType;
-use App\Form\ForgottenPasswordType;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
 
@@ -89,14 +90,6 @@ class SecurityController extends AbstractController
     }
 
 
-      /**
-      * @Route("/forgottenPassword", name="forgotten_password")
-      */
-      public function forgottenPassword(Request $request)
-      {
-        return $this->render('security/forgotten_password.html.twig');
-      }
-
 
         /**
         * @Route("/password", name="change_password")
@@ -133,6 +126,89 @@ class SecurityController extends AbstractController
         return $this->render("home/index.html.twig"); 
         
         }
+
+
+        /**
+     * @Route("/forgottenPassword", name="forgotten_password", methods="GET|POST")
+     */
+    public function forgottenPassword(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator): Response
+    {
+        if ($request->isMethod('POST')) {
+ 
+            $email = $request->request->get('email');
+ 
+            $entityManager = $this->getDoctrine()->getManager();
+            $intermediaire = $entityManager->getRepository(Intermediaire::class)->findOneByEmail($email);
+ 
+            if ($intermediaire === null) {
+                $this->addFlash('danger', 'Email Inconnu, recommence !');
+                return $this->redirectToRoute('forgotten_password');
+            }
+            $token = $tokenGenerator->generateToken();
+ 
+            try{
+                $intermediaire->setResetToken($token);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('warning', $e->getMessage());
+                return $this->redirectToRoute('Home');
+            }
+ 
+            $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+ 
+            $message = (new \Swift_Message('Oubli de mot de passe - Réinisialisation'))
+                ->setFrom("surassur.amc@gmail.com")
+                ->setTo($intermediaire->getEmail())
+                ->setBody(
+                $this->renderView(
+                    'security/MailPassword.html.twig',
+                    [
+                        'intermediaire'=>$intermediaire,
+                        'url'=>$url
+                    ]
+                ),
+                    'text/html'
+                );
+            $mailer->send($message);
+ 
+            $this->addFlash('notice', 'Mail envoyé, vérifier votre boîte email!');
+ 
+            return $this->redirectToRoute('app_login');
+        }
+ 
+        return $this->render('security/forgotten_Password.html.twig');
+    }
+
+     /**** Réinisialiation du mot de passe par mail
+     * @Route("/resetPassword/{token}", name="reset_password")
+     */
+    public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        //Reset avec le mail envoyé
+        if ($request->isMethod('POST')) {
+            $entityManager = $this->getDoctrine()->getManager();
+ 
+            $intermediaire = $entityManager->getRepository(Intermediaire::class)->findOneByResetToken($token);
+            /* @var $user User */
+ 
+            if ($user === null) {
+                $this->addFlash('danger', 'Mot de passe non reconnu');
+                return $this->redirectToRoute('home');
+            }
+ 
+            $intermediaire->setResetToken(null);
+            $intermediaire->setPassword($passwordEncoder->encodePassword($intermediaire, $request->request->get('password')));
+            $entityManager->flush();
+ 
+            $this->addFlash('notice', 'Mot de passe mis à jour !');
+ 
+            return $this->redirectToRoute('security_login');
+        }else {
+ 
+            return $this->render('security/resetPassword.html.twig', ['token' => $token]);
+        }
+ 
+    }
 
     }
 

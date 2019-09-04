@@ -10,9 +10,8 @@
             <tr>
                 <th>Nom</th>
                 <th>Prenom</th>
-                <th>DateNaissance</th>
+                <th>Date de Naissance</th>
                 <th>Telephone</th>
-                <th>StatutBeneficiaire</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -24,8 +23,8 @@
                 <td>{{ assure.dateNaissance ? assure.dateNaissance|date('Y-m-d') : '' }}</td>
                 <td>{{ assure.telephone }}</td>
                 <td>
-                    <a href="{{ path('assure_show', {'id': assure.id}) }}">show</a>
-                    <a href="{{ path('assure_edit', {'id': assure.id}) }}">edit</a>
+                    <a href="{{ path('assure_show', {'id': assure.id}) }}">Détails</a>
+                    <a href="{{ path('assure_edit', {'id': assure.id}) }}">Editer</a>
                 </td>
             </tr>
         {% else %}
