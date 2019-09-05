@@ -235,9 +235,9 @@ class AssureController extends AbstractController
              */
             public function deleteBeneficiaire(Request $request, Beneficiaire $beneficiaire): Response
             {
+               
                 if ($this->isCsrfTokenValid('delete'.$beneficiaire->getId(), $request->request->get('_token'))) {
                     $entityManager = $this->getDoctrine()->getManager();
-                    $id=$beneficiaire->getassure();
                     $entityManager->remove($beneficiaire);
                     $entityManager->flush();
                     

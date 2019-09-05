@@ -17,6 +17,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+
 
 
 
@@ -94,23 +96,27 @@ class SecurityController extends AbstractController
         /**
         * @Route("/password", name="change_password")
         */
-        public function changePassword(Request $request)
+        public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
         {
             $em = $this->getDoctrine()->getManager();
             $user = $this->getUser();
             $form = $this->createForm(ChangePasswordType::class, $user);
+            $ok = 1;
 
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
-
-                $passwordEncoder = $this->get('security.password_encoder');
+                
                 $oldPassword = $request->request->get('change_password')['oldPassword'];
 
                 // Si l'ancien mot de passe est bon
                 if ($passwordEncoder->isPasswordValid($user, $oldPassword)) {
                 
-                $newEncodedPassword = $passwordEncoder->encodePassword($user, $user->getPassword());
-                $user->setPassword($newEncodedPassword);
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
                 $em->persist($user);
                 $em->flush();
 
@@ -123,7 +129,9 @@ class SecurityController extends AbstractController
                 }
         }
 
-        return $this->render("home/index.html.twig"); 
+        return $this->render("security/change_password.html.twig", array(
+                                'form' => $form->createView(),
+        )); 
         
         }
 

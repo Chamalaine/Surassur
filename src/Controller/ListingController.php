@@ -8,11 +8,13 @@ use App\Form\ListingType;
 use App\Entity\Souscripteur;
 use Swiftmailer\Swiftmailer;
 use App\Repository\ListingRepository;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+
 
 /**
  * @Route("/profile/listing")
@@ -177,32 +179,57 @@ class ListingController extends AbstractController
         ]);
     }
 
-             /**
-             * @Route("/excel", name="excel",  methods={"GET"})
-             */
-            public function excel()
-            {
-                $spreadsheet = new Spreadsheet();
-                
-                /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
-                $sheet = $spreadsheet->getActiveSheet();
-                $sheet->setCellValue('A1', 'Hello World !');
-                $sheet->setTitle("My First Worksheet");
-                
-                // Create your Office 2007 Excel (XLSX Format)
-                $writer = new Xlsx($spreadsheet);
-                
-                // In this case, we want to write the file in the public directory
-                $publicDirectory = $this->get('kernel')->getProjectDir() . '/public';
-                // e.g /var/www/project/public/my_first_excel_symfony4.xlsx
-                $excelFilepath =  $publicDirectory . '/my_first_excel_symfony4.xlsx';
-                
-                // Create the file
-                $writer->save($excelFilepath);
-                
-                // Return a text response to the browser saying that the excel was succesfully created
-                return new Response("Excel generated succesfully");
+    /**
+     * @Route("/excel", name="excel", methods={"GET"})
+     */
+    protected function createSpreadsheet()
+    {
+        $spreadsheet = new Spreadsheet();
+        // Get active sheet - it is also possible to retrieve a specific sheet
+        $sheet = $spreadsheet->getActiveSheet();
+    
+        // Set cell name and merge cells
+        $sheet->setCellValue('A1', 'Browser characteristics')->mergeCells('A1:D1');
+    
+        // Set column names
+        $columnNames = [
+            'Browser',
+            'Developper',
+            'Release date',
+            'Written in',
+        ];
+        $columnLetter = 'A';
+        foreach ($columnNames as $columnName) {
+            // Allow to access AA column if needed and more
+            $columnLetter++;
+            $sheet->setCellValue($columnLetter.'2', $columnName);
+        }
+    
+        // Add data for each column
+        $columnValues = [
+            ['Google Chrome', 'Google Inc.', 'September 2, 2008', 'C++'],
+            ['Firefox', 'Mozilla Foundation', 'September 23, 2002', 'C++, JavaScript, C, HTML, Rust'],
+            ['Microsoft Edge', 'Microsoft', 'July 29, 2015', 'C++'],
+            ['Safari', 'Apple', 'January 7, 2003', 'C++, Objective-C'],
+            ['Opera', 'Opera Software', '1994', 'C++'],
+            ['Maxthon', 'Maxthon International Ltd', 'July 23, 2007', 'C++'],
+            ['Flock', 'Flock Inc.', '2005', 'C++, XML, XBL, JavaScript'],
+        ];
+    
+        $i = 3; // Beginning row for active sheet
+        foreach ($columnValues as $columnValue) {
+            $columnLetter = 'A';
+            foreach ($columnValue as $value) {
+                $columnLetter++;
+                $sheet->setCellValue($columnLetter.$i, $value);
             }
+            $i++;
+        }
+    
+        return $spreadsheet;
+    }
+
+          
 
    
 }

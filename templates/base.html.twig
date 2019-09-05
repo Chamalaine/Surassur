@@ -11,6 +11,7 @@
         {% endblock %}
     </head>
     <body>
+            <img src="{{ asset('asset/img/logo.png')}}" id="logo"/>
     <div class="container" style="border: 1px solid #E0D564" >
     <nav class="navbar navbar-light" style="background-color: #3D7373;">
         <a href="{{ path('Home') }}" class="navbar-brand"style="color:#E0D564"  > Accueil<a>
@@ -38,7 +39,6 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <img src="{{ asset('asset/img/logo.png')}}" id="logo"/>
 
         {% block body %}
        
@@ -47,7 +47,7 @@
         {% endblock %}
         <footer class="footer-copyright text-center py-3">
             {% block footer %}
-                <p>Surassur © Soufi Chamalaine - Association Multiculturelle</p>
+                <p>Surassur © Soufi Chamalaine Boloss - Association Multiculturelle</p>
             {% endblock %}
             </footer>
         {% block javascripts %}{% endblock %}

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e02f938ee470a053703110445de7e014",
+    "content-hash": "3a7979c7576a2645d0011de35a9dfbb2",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -6346,6 +6346,44 @@
                 "validate"
             ],
             "time": "2018-12-25T11:19:39+00:00"
+        },
+        {
+            "name": "yectep/phpspreadsheet-bundle",
+            "version": "v0.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yectep/phpspreadsheet-bundle.git",
+                "reference": "d2cdc11ebfe0289a0688ef768fb7d2941366cb0a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yectep/phpspreadsheet-bundle/zipball/d2cdc11ebfe0289a0688ef768fb7d2941366cb0a",
+                "reference": "d2cdc11ebfe0289a0688ef768fb7d2941366cb0a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "phpoffice/phpspreadsheet": "~1.1",
+                "symfony/framework-bundle": "~2.7|~3.0|~4.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Yectep\\PhpSpreadsheetBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chester Li",
+                    "email": "yectep@gmail.com"
+                }
+            ],
+            "description": "A Symfony bundle to integrate with PHPOffice's PhpSpreadsheet library",
+            "time": "2019-05-20T06:13:24+00:00"
         },
         {
             "name": "zendframework/zend-code",
