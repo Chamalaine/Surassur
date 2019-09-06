@@ -16,12 +16,10 @@ class ForgottenPasswordType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
     $builder
-            ->add('email', PasswordType::class, array(
-            'mapped' => false
-            ))
-            ->add('submit', SubmitType::class, array(
+            ->add('email')
+            ->add('Valider', SubmitType::class, array(
             'attr' => array(
-            'class' => 'btn btn-primary btn-block'
+            'class' => 'btn btn-primary'
                 )));
 
     }

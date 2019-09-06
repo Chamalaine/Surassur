@@ -5,10 +5,11 @@ namespace App\Controller;
 use App\Entity\Intermediaire;
 use App\Form\IntermediaireType;
 use App\Repository\IntermediaireRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -70,7 +71,18 @@ class IntermediaireController extends AbstractController
      */
     public function delete(Request $request, Intermediaire $intermediaire): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$intermediaire->getId(), $request->request->get('_token'))) {
+        $id=$intermediaire->getId();
+        $currentUserId = $this->getUser()->getId();
+
+        /* Avant de pouvoir supprimer notre Utilisateur de la base de donnée, il faut d'abord le vider de la Session */
+        if ($currentUserId == $id)
+        {
+          $session = $this->get('session');
+          $session = new Session();
+          $session->invalidate();
+        }
+
+        if ($this->isCsrfTokenValid('delete'.$id, $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($intermediaire);
             $entityManager->flush();

@@ -84,6 +84,13 @@ class Intermediaire implements UserInterface
      */
     private $ville;
 
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resetToken;
+
+
     
  
 
@@ -339,8 +346,22 @@ class Intermediaire implements UserInterface
 
         return $this;
     }
- 
 
+    /**
+     * @return string
+     */
+    public function getResetToken(): string
+    {
+        return $this->resetToken;
+    }
+
+    /**
+     * @param string $resetToken
+     */
+    public function setResetToken(?string $resetToken): void
+    {
+        $this->resetToken = $resetToken;
+    }
 
 
 

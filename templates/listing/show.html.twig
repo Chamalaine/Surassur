@@ -59,9 +59,12 @@
     <a class="btn btn-outline-success my-2 my-sm-0" href="{{ path('assure_ajout', {'id': listing.id}) }}">Ajouter Assuré</a>
     <br>
     <a class = "btn-info " href="{{path('listing_pdf', {'id': listing.id})}}">PDF</a>
-
     <br>
+    {% if listing.dateEnvoi %}
+    <a class = "btn-info "  href="{{path('listing_envoyer', {'id': listing.id})}}">Renvoyer le Listing</a>
+    {% else %}
     <a class = "btn-info "  href="{{path('listing_envoyer', {'id': listing.id})}}">Envoyer le Listing</a>
+    {% endif %}
     <br>
     <a class = "btn-info "  href="{{ path('excel') }}">Générer tableau</a>
     <br>
