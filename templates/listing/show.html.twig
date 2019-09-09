@@ -34,23 +34,25 @@
                 <th>Nombre d'assurés</th>
                 <td>{{ nb }}</td>
             </tr>
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Date de Naissance</th>
-            </tr>
-
-                {% for assure in listing.assures %}<tr>
-                <td>{{ assure.nom }}</td>
-                <td>{{ assure.prenom }}</td>
-                <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
-                <td><a href="{{ path('assure_show', {'id': assure.id}) }}">Détails</a></td>
-                </tr>
-                
-                {% endfor %}
-
-
-            
+            </tbody>
+    </table>
+            <table id="listing" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Date de Naissance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for assure in listing.assures %}
+                    <tr>
+                        <td>{{ assure.nom }}</td>
+                        <td>{{ assure.prenom }}</td>
+                        <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
+                        <td><a href="{{ path('assure_show', {'id': assure.id}) }}">Détails</a></td>
+                    </tr>
+                    {% endfor %}
         </tbody>
     </table>
 
@@ -73,4 +75,14 @@
     <a class="btn-warning" href="{{ path('listing_index') }}">Retour</a>
 
     {{ include('listing/_delete_form.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+    $('#listing').DataTable();
+    });
+    </script>
 {% endblock %}

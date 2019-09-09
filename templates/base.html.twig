@@ -5,6 +5,14 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ asset('asset/css/style.css')}}"> 
         <link rel="icon" href="{{asset('asset/img/favicon.png')}}"/>
+        <!-- Script -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> 
+        <!-- Tableaux -->
+        <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
+        <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+
+
         <title>{% block title %}Surassur{% endblock %}</title>
         {% block stylesheets %}
            
@@ -50,9 +58,12 @@
                 <p>Surassur © Soufi Chamalaine Bogosse - Association Multiculturelle</p>
             {% endblock %}
             </footer>
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+        {% endblock %}
         </div>
     </body>
+
+    
 
     
 </html>

@@ -90,6 +90,11 @@ class Intermediaire implements UserInterface
      */
     private $resetToken;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $last_login;
+
 
     
  
@@ -361,6 +366,18 @@ class Intermediaire implements UserInterface
     public function setResetToken(?string $resetToken): void
     {
         $this->resetToken = $resetToken;
+    }
+
+    public function getLastLogin(): ?\DateTimeInterface
+    {
+        return $this->last_login;
+    }
+
+    public function setLastLogin(\DateTimeInterface $last_login): self
+    {
+        $this->last_login = $last_login;
+
+        return $this;
     }
 
 
