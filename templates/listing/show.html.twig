@@ -42,6 +42,7 @@
                         <th>Nom</th>
                         <th>Prénom</th>
                         <th>Date de Naissance</th>
+                        <th>Détails</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,9 +81,9 @@
 {% block javascripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
-    <script type="text/javascript">
-    $(document).ready(function () {
-    $('#listing').DataTable();
-    });
+    <script>
+          $(document).ready(function(){
+          $('#listing').DataTable({});
+          });
     </script>
 {% endblock %}

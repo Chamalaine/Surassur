@@ -130,48 +130,46 @@ class AssureController extends AbstractController
     }
 
 
-     /**
-     * @Route("/{id}/ajout", name="assure_ajout", methods={"GET","POST"})
-     */
-    public function addAssure(request $request, ListingRepository $listingRepository, $id):Response
-    {
-        {   
+        /**
+         * @Route("/{id}/ajout", name="assure_ajout", methods={"GET","POST"})
+         */
+        public function addAssure(request $request, Listing $listing):Response
+        {
+          
             /* Ajout d'assuré */
 
-            $listingRepository = $this->getDoctrine()->getRepository(Listing::class);
+            
             $assure = new Assure();
             $form = $this->createForm(AssureType::class, $assure);
             $form->handleRequest($request);
     
             if ($form->isSubmitted() && $form->isValid()) {
                 $assure->setIntermediaire($this->getUser());
-                $listing=$listingRepository->find($id);
+                
                 /* Vérification si l'assuré est déjà présent dans la base de donnée */
                 $doublon=$this->getDoctrine()->getRepository(Assure::class)->doublonAssure($assure);
                 if($doublon === null){
-                $assure->addListing($listing);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($assure);
+                    $assure->addListing($listing);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($assure);
                 }
                 else{
-                /* Si l'assuré est déjà présent, alors on ajoute le listing présent dans la table de l'assuré */
-                $doublon->addListing($listing);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($doublon);
+                    /* Si l'assuré est déjà présent, alors on ajoute le listing présent dans la table de l'assuré */
+                    $doublon->addListing($listing);
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($doublon);
                 }
 
                 $entityManager->flush();
                 
                 $this->addFlash('success','Assuré ajouté avec succes');
                 /* Deux boutons de validations sont disponibles, ajouter un nouvel assuré ou alors ajouter des bénéficiaires à l'assuré ajouté */
-                if ($form->getClickedButton() && 'beneficiaire' === $form->getClickedButton()->getName()) {
+                if ('beneficiaire' === $form->getClickedButton()->getName()) {
 
-                    $id=$assure->getId();
-                    return $this->redirectToRoute('beneficiaire_ajout',array('id'=>$id));
+                    return $this->redirectToRoute('beneficiaire_ajout',array('id' => $assure->getId()));
                 }
 
-                return $this->redirectToRoute('assure_ajout',array('id'=>$id));
-
+                return $this->redirectToRoute('assure_ajout',array('id' => $listing->getId()));
             }
             
             return $this->render('assure/new.html.twig', [
@@ -179,7 +177,6 @@ class AssureController extends AbstractController
                 'form' => $form->createView(),
             ]);
         }
-    }
 
 
             /**
@@ -248,33 +245,29 @@ class AssureController extends AbstractController
 
 
             /**
-             * @Route("/{id}/ajout", name="beneficiaire_ajout", methods={"GET","POST"})
+             * @Route("/{id}/ajoutbenef", name="beneficiaire_ajout", methods={"GET","POST"})
              */
-            public function ajouterBeneficiaire(request $request, AssureRepository $assureRepository, $id):Response
+            public function ajouterBeneficiaire(request $request, Assure $assure):Response
             {
-                {   
-                    $assureRepository = $this->getDoctrine()->getRepository(Assure::class);
+                   
+                    
                     $beneficiaire = new beneficiaire();
                     $form = $this->createForm(BeneficiaireType::class, $beneficiaire);
                     $form->handleRequest($request);
             
                     if ($form->isSubmitted() && $form->isValid()){
-                        $assure=$assureRepository->find($id);
+                       
                         $beneficiaire->setAssure($assure);
                         $entityManager = $this->getDoctrine()->getManager();
                         $entityManager->persist($beneficiaire);
                         $entityManager->flush();
 
-                        if ($form->getClickedButton() && 'assure' === $form->getClickedButton()->getName()) {
+                        if ('assure' === $form->getClickedButton()->getName()) {
                             
-                            $listing =$assure->getListings()->last();
-                            $id=$listing->getId();
-                            
-
-                            return $this->redirectToRoute('assure_ajout',array('id'=>$id));
+                            return $this->redirectToRoute('assure_ajout',array('id'=>$assure->getListings()->last()->getId()));
                         }
             
-                        return $this->redirectToRoute('beneficiaire_ajout',array('id'=>$id) );
+                        return $this->redirectToRoute('beneficiaire_ajout',array('id'=>$assure->getId()));
                     }
             
                     return $this->render('beneficiaire/new.html.twig', [
@@ -282,7 +275,7 @@ class AssureController extends AbstractController
                         'beneficiaire' => $beneficiaire,
                         'form' => $form->createView(),
                     ]);
-                }
+                
             }
 
     

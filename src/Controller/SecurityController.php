@@ -53,12 +53,7 @@ class SecurityController extends AbstractController
 
             $this->addFlash('success','Inscription réussie');
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            return $this->redirectToRoute('Home');
         }
 
         return $this->render('registration/register.html.twig', [

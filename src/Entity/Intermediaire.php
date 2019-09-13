@@ -84,20 +84,15 @@ class Intermediaire implements UserInterface
      */
     private $ville;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastLogin;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resetToken;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $last_login;
-
-
-    
- 
 
 
 
@@ -370,12 +365,12 @@ class Intermediaire implements UserInterface
 
     public function getLastLogin(): ?\DateTimeInterface
     {
-        return $this->last_login;
+        return $this->lastLogin;
     }
 
-    public function setLastLogin(\DateTimeInterface $last_login): self
+    public function setLastLogin(\DateTimeInterface $lastLogin): self
     {
-        $this->last_login = $last_login;
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }
