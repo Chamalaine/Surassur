@@ -6,6 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Captcha\Bundle\CaptchaBundle\Validator\Constraints as CaptchaAssert;
+
+
+/**
+ * @ORM\Entity
+ * @UniqueEntity("email")
+ */
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\IntermediaireRepository")
@@ -93,6 +101,12 @@ class Intermediaire implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resetToken;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $DateToken;
+
 
 
 
@@ -374,6 +388,19 @@ class Intermediaire implements UserInterface
 
         return $this;
     }
+
+    public function getDateToken(): ?\DateTimeInterface
+    {
+        return $this->DateToken;
+    }
+
+    public function setDateToken(?\DateTimeInterface $DateToken): self
+    {
+        $this->DateToken = $DateToken;
+
+        return $this;
+    }
+
 
 
 

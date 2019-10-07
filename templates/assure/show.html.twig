@@ -3,6 +3,7 @@
 {% block title %}Assure{% endblock %}
 
 {% block body %}
+
     <h1>Assure</h1>
      {% for message in app.flashes('success') %}
          <div class="alert alert-success">
@@ -78,4 +79,5 @@
     <a href="{{ path('assure_edit', {'id': assure.id}) }}">Editer</a>
 
     {{ include('assure/_delete_form.html.twig') }}
+
 {% endblock %}

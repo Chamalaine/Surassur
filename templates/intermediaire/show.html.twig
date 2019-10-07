@@ -3,6 +3,7 @@
 {% block title %}Intermediaire{% endblock %}
 
 {% block body %}
+    {% if app.user.username == intermediaire.email  %}
     <h1>Intermediaire</h1>
 
     <table class="table">
@@ -73,4 +74,5 @@
     <a href="{{ path('intermediaire_edit', {'id': intermediaire.id}) }}">Editer</a>
 
     {{ include('intermediaire/_delete_form.html.twig') }}
+    {% endif %}
 {% endblock %}

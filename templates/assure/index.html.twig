@@ -11,7 +11,7 @@
             </div>
         {% endfor %}
 
-    <table class="table">
+    <table id="assures" class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>Nom</th>
@@ -39,11 +39,7 @@
                 <td>{{ assure.ville }}</td>
                 <td>{{ assure.cp }}</td>
                 <td>{{ assure.complement }}</td>
-                {% for beneficiaire in assure.beneficiaires %}
-                <td>{{ beneficiaire.nom}}  {{beneficiaire.prenom}}
-                    {{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('d-m-Y') : ''}} {{beneficiaire.relation}}
-                <td>
-                {% endfor %}
+                <td>{{ assure.beneficiaires|length }}</td>
                 <td>
                     <a href="{{ path('assure_show', {'id': assure.id}) }}">Détails</a>
                     <a href="{{ path('assure_edit', {'id': assure.id}) }}">Editer</a>      
@@ -56,4 +52,17 @@
         {% endfor %}
         </tbody>
     </table>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+    <script>
+          $(document).ready(function(){
+          $('#assures').DataTable({
+              
+          });
+          });
+    </script>
 {% endblock %}

@@ -10,6 +10,7 @@
         <!-- Tableaux -->
         <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
         <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
 
 
 
@@ -30,10 +31,10 @@
         <br>
         <div class="checkbox mb-3">{{ app.user.nom }}</a>
         <a href="{{ path('intermediaire_show', {'id': app.user.id})}}"> Profil</a>
-        <a href="{{ path('app_logout') }}" class="nav-link"> Deconnexion<a>
+        <a href="{{ path('logout') }}" class="nav-link"> Deconnexion<a>
         {% else %}
-        <a href="{{ path('app_login') }}" class="nav-link"> Connexion<a>
-        <a href="{{ path('app_register') }}" class="nav-link"> Inscription<a>
+        <a href="{{ path('login') }}" class="nav-link"> Connexion<a>
+        <a href="{{ path('register') }}" class="nav-link"> Inscription<a>
         {% endif %}
 </nav>
          {% for message in app.flashes('success') %}
@@ -55,7 +56,7 @@
         {% endblock %}
         <footer class="footer-copyright text-center py-3">
             {% block footer %}
-                <p>Surassur © Soufi Chamalaine Bogosse - Association Multiculturelle</p>
+                <p>Surassur © Soufi Chamalaine - Association Multiculturelle</p>
             {% endblock %}
             </footer>
         {% block javascripts %}

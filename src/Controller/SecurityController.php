@@ -19,6 +19,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use ReCaptcha\ReCaptcha;
+
+
 
 
 
@@ -27,34 +30,45 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 class SecurityController extends AbstractController
 {
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/inscription", name="register")
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginAuthenticator $authenticator): Response
     {
+
+
         $user = new Intermediaire();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $user->setDateCreation( new \DateTime());
+        $recaptcha = new ReCaptcha("6LevPbwUAAAAALFU7QUz-1eTm6zlx4pcn1f2vblQ");
+        $resp = $recaptcha->verify($request->request->get('g-recaptcha-response'), $request->getClientIp());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+        if ($resp->isSuccess()) {
 
-            // do anything else you need here, like send an email
+            if ($form->isSubmitted() && $form->isValid()) {
+                // encode the plain password
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+                $user->setDateCreation( new \DateTime());
+    
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+    
+                // do anything else you need here, like send an email
+    
+                $this->addFlash('success','Inscription réussie');
+    
+                return $this->redirectToRoute('Home');
+            }
 
-            $this->addFlash('success','Inscription réussie');
-
-            return $this->redirectToRoute('Home');
         }
+
+        
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
@@ -62,7 +76,7 @@ class SecurityController extends AbstractController
     }
 
      /**
-     * @Route("/login", name="app_login")
+     * @Route("/connexion", name="login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -80,17 +94,18 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/logout", name="app_logout")
+     * @Route("/deconnexion", name="logout")
      */
     public function logout()
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+
     }
 
 
 
         /**
-        * @Route("/password", name="change_password")
+        * @Route("/motdepasse", name="change_password")
         */
         public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder)
         {
@@ -132,8 +147,8 @@ class SecurityController extends AbstractController
         }
 
 
-        /**
-     * @Route("/forgottenPassword", name="forgotten_password", methods="GET|POST")
+    /**
+     * @Route("/oublimotdepasse", name="forgotten_password", methods="GET|POST")
      */
     public function forgottenPassword(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator): Response
     {       
@@ -150,15 +165,17 @@ class SecurityController extends AbstractController
             $intermediaire = $em->getRepository(Intermediaire::class)->findOneByEmail($email);
  
             if ($intermediaire === null) {
-                $this->addFlash('danger', 'Email Inconnu, recommence !');
+                $this->addFlash('error', 'Email Inconnu, recommence !');
                 return $this->redirectToRoute('forgotten_password');
             }
             
             /* Création du token à l'aide du TokenGeneratorInterface fournie nativement par Symfony */
             $token = $tokenGenerator->generateToken();
+            $current = New \Datetime();
             
             /* On insère le token crée à notre utilisateur */
             $intermediaire->setResetToken($token);
+            $intermediaire->setDateToken($current);
             $em->persist($intermediaire);
             $em->flush();
             
@@ -181,9 +198,9 @@ class SecurityController extends AbstractController
                 );
             $mailer->send($message);
  
-            $this->addFlash('notice', 'Mail envoyé, vérifier votre boîte email!');
+            $this->addFlash('success', 'Mail envoyé, vérifier votre boîte email!');
  
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('login');
         }
  
         return $this->render('security/forgotten_Password.html.twig', [
@@ -200,17 +217,21 @@ class SecurityController extends AbstractController
         $form = $this->createForm(ResetPasswordType::class);
         $form->handleRequest($request);
 
+        $em = $this->getDoctrine()->getManager();
+        $intermediaire = $em->getRepository(Intermediaire::class)->findOneByResetToken($token);
+        $date=$intermediaire->getDateToken();
+        $current = new \DateTime();
+        $interval = $date->diff($current)->format('%i');
 
+        if($interval>20){
+            $this->addFlash('error', 'Lien expiré');
+            return $this->redirectToRoute('Home');
+        }
         //Reset avec le mail envoyé
-        if ($form->isSubmitted() && $form->isValid()){
-            $em = $this->getDoctrine()->getManager();
- 
-            $intermediaire = $em->getRepository(Intermediaire::class)->findOneByResetToken($token);
-            /* @var $user User */
-            
+        if ($form->isSubmitted() && $form->isValid()){            
 
             if ($intermediaire === null) {
-                $this->addFlash('danger', 'Mot de passe non reconnu');
+                $this->addFlash('error', '');
                 return $this->redirectToRoute('Home');
             }
 
@@ -223,9 +244,9 @@ class SecurityController extends AbstractController
             $em->persist($intermediaire);
             $em->flush();
  
-            $this->addFlash('notice', 'Mot de passe mis à jour !');
+            $this->addFlash('success', 'Mot de passe mis à jour !');
  
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('login');
         }
         else {
             return $this->render('security/resetPassword.html.twig', ['token' => $token,'form' => $form->createView(),]

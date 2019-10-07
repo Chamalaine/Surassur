@@ -9,7 +9,7 @@
     {% endif %}
 
     {% if app.user %}
-        <div class="checkbox mb-3">Bienvenu {{ app.user.username }}, <a href="{{ path('app_logout') }}">Deconnexion</a>
+        <div class="checkbox mb-3">Bienvenu {{ app.user.username }}, <a href="{{ path('logout') }}">Deconnexion</a>
     {% endif %}
 
     <h1 class="h3 mb-3 font-weight-normal">Connectez-vous</h1>

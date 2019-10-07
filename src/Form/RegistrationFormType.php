@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
+
 
 class RegistrationFormType extends AbstractType
 {
@@ -43,6 +45,7 @@ class RegistrationFormType extends AbstractType
             ->add('cp')
             ->add('ville')
             ->add('nom')
+
         ;
     }
 

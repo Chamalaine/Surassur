@@ -33,10 +33,18 @@ class IntermediaireController extends AbstractController
      */
     public function show(Intermediaire $intermediaire): Response
     {
+        $user=$this->getUser()->getId();
+        $id=$intermediaire->getId();
+        
+        if($user==$id){
         return $this->render('intermediaire/show.html.twig', [
             'intermediaire' => $intermediaire,
         ]);
-    }
+        }
+
+        return $this->redirectToRoute('Home');
+
+        }
 
     /**
      * @Route("/{id}/edit", name="intermediaire_edit", methods={"GET","POST"})
