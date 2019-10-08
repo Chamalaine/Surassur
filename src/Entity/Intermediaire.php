@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Captcha\Bundle\CaptchaBundle\Validator\Constraints as CaptchaAssert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 
 /**
  * @ORM\Entity
- * @UniqueEntity("email")
+ * @UniqueEntity(fields={"email"}, message="Cet email est déjà utilisé.")
  */
 
 
@@ -53,7 +55,7 @@ class Intermediaire implements UserInterface
     private $dateCreation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Listing", mappedBy="intermediaire")
+     * @ORM\OneToMany(targetEntity="App\Entity\Listing", mappedBy="intermediaire", cascade={"remove"})
      */
     private $listings;
 
@@ -63,7 +65,7 @@ class Intermediaire implements UserInterface
     private $souscripteurs;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Assure", mappedBy="intermediaire")
+     * @ORM\OneToMany(targetEntity="App\Entity\Assure", mappedBy="intermediaire", cascade={"remove"})
      */
     private $assures;
 

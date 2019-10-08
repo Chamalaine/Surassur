@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+    <h1>Contact</h1>
+
+    {{ form_start(contactForm) }}
+        {{ form_row(contactForm.email) }}
+        {{ form_row(contactForm.telephone) }}
+        {{ form_row(contactForm.objet) }}
+        {{ form_row(contactForm.message) }}
+        <div class="g-recaptcha" data-sitekey="6LevPbwUAAAAAGJ4cWOe178G7FOakMH_qxX3YezP"></div>
+    {{ form_end(contactForm) }}
+{% endblock %}

@@ -43,10 +43,9 @@ class SecurityController extends AbstractController
         $recaptcha = new ReCaptcha("6LevPbwUAAAAALFU7QUz-1eTm6zlx4pcn1f2vblQ");
         $resp = $recaptcha->verify($request->request->get('g-recaptcha-response'), $request->getClientIp());
 
-        if ($resp->isSuccess()) {
-
             if ($form->isSubmitted() && $form->isValid()) {
-                // encode the plain password
+                
+                if ($resp->isSuccess()) {
                 $user->setPassword(
                     $passwordEncoder->encodePassword(
                         $user,
@@ -59,15 +58,21 @@ class SecurityController extends AbstractController
                 $em->persist($user);
                 $em->flush();
     
-                // do anything else you need here, like send an email
+                
     
                 $this->addFlash('success','Inscription réussie');
     
                 return $this->redirectToRoute('Home');
             }
 
-        }
+                    $this->addFlash('error', 'Veuillez valider le reCaptcha');
 
+            return $this->render('registration/register.html.twig', [
+                'registrationForm' => $form->createView(),
+            ]);
+
+
+        }
         
 
         return $this->render('registration/register.html.twig', [

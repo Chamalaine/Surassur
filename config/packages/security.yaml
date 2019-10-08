@@ -24,6 +24,8 @@ security:
                     - App\Security\LoginAuthenticator
             logout:
                 path: logout
+                delete_cookies: ['PHPSESSID']
+                target: home
                 # where to redirect after logout
                 # target: app_any_route
 

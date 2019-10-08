@@ -54,6 +54,13 @@ class IntermediaireController extends AbstractController
         $form = $this->createForm(IntermediaireType::class, $intermediaire);
         $form->handleRequest($request);
 
+        $user=$this->getUser()->getId();
+        $id=$intermediaire->getId();
+        
+        if($user!=$id){
+            return $this->redirectToRoute('Home');
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $intermediaire->setPassword(
                 $passwordEncoder->encodePassword(
@@ -85,9 +92,7 @@ class IntermediaireController extends AbstractController
         /* Avant de pouvoir supprimer notre Utilisateur de la base de donnée, il faut d'abord le vider de la Session */
         if ($currentUserId == $id)
         {
-          $session = $this->get('session');
-          $session = new Session();
-          $session->invalidate();
+          $this->redirectToRoute('logout');
         }
 
         if ($this->isCsrfTokenValid('delete'.$id, $request->request->get('_token'))) {

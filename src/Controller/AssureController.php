@@ -60,6 +60,8 @@ class AssureController extends AbstractController
         $form = $this->createForm(NewAssureType::class, $assure);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
@@ -142,6 +144,8 @@ class AssureController extends AbstractController
             $assure = new Assure();
             $form = $this->createForm(AssureType::class, $assure);
             $form->handleRequest($request);
+
+           
     
             if ($form->isSubmitted() && $form->isValid()) {
                 $assure->setIntermediaire($this->getUser());
