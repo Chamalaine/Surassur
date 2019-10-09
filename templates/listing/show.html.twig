@@ -75,7 +75,7 @@
     <br>
     <a class="btn-warning" href="{{ path('listing_index') }}">Retour</a>
 
-    {{ include('listing/_delete_form.html.twig') }}
+    {{ include('listing/delete_form.html.twig') }}
 {% endblock %}
 
 {% block javascripts %}
@@ -83,9 +83,9 @@
     <script type="text/javascript" src="jquery.dataTables.js"></script>
     <script type="text/javascript">
           $(document).ready(function(){
-          $('#listing').DataTable({
+          $('#listing').dataTable( {
               "language": {
-            "url": "dataTables.french.lang"
+                    "url": "dataTables.french.lang"
             }
               
           });

@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Dompdf\Dompdf;
 use App\Entity\Listing;
 use App\Form\ListingType;
 use App\Entity\Souscripteur;
 use Swiftmailer\Swiftmailer;
 use App\Repository\ListingRepository;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -141,6 +141,9 @@ class ListingController extends AbstractController
         return $dompdf->stream($listing->getNom().".pdf");
     }
 
+
+
+
     /**
      * @Route("/{id}/envoyer}", name="listing_envoyer", methods={"GET"})
      */
@@ -149,6 +152,35 @@ class ListingController extends AbstractController
         /* Envoie de Listing par mail à l'aide de SwiftMailer */
         /* Insertion de la date d'envoi du listing dans la base de donnée */
         $listing->setDateEnvoi(new \DateTime());
+
+        $dompdf = new Dompdf();
+
+        $html = $this->renderView(
+            'listing/pdf.html.twig',
+            ['listing' => $listing]);
+        $dompdf->loadHtml($html);
+
+        // Orientation du PDF, ici en paysage et format A4
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Conversion de l'HTML en PDF
+        $dompdf->render();
+
+        $pdf = $dompdf->output();
+
+        $spreadsheet = new Spreadsheet();
+        
+        /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue('A1', 'Hello World !');
+        $sheet->setTitle("My First Worksheet");
+        
+        // Create your Office 2007 Excel (XLSX Format)
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('hello world.xlsx');
+
+        
+
         $tab = $listing->getassures();
         $nb = count($tab);
         $message = (new \Swift_Message($listing->getNom()))
@@ -165,7 +197,14 @@ class ListingController extends AbstractController
                 ),
                 'text/html'
             )
+            
         ;
+
+        $attachmentPdf = new \Swift_Attachment($pdf, $listing->getNom().".pdf", 'application/pdf');
+        $attachmentTab = new \Swift_Attachment($writer, $listing->getNom().".xlsx", 'application/pdf');
+
+        $message->attach($attachmentPdf);
+        $message->attach($attachmentTab);
         /* Envoie du mail */
         $mailer->send($message);
         
@@ -182,7 +221,7 @@ class ListingController extends AbstractController
     /**
      * @Route("/excel", name="excel", methods={"GET"})
      */
-    protected function createSpreadsheet()
+    protected function excelListing(\Swift_Mailer $mailer)
     {
         $spreadsheet = new Spreadsheet();
         // Get active sheet - it is also possible to retrieve a specific sheet
