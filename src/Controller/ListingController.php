@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 use Dompdf\Dompdf;
 use App\Entity\Listing;
 use App\Form\ListingType;
@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Yectep\PhpSpreadsheetBundle\Factory;
+
 
 
 /**
@@ -167,20 +170,7 @@ class ListingController extends AbstractController
         $dompdf->render();
 
         $pdf = $dompdf->output();
-
-        $spreadsheet = new Spreadsheet();
-        
-        /* @var $sheet \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet */
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Hello World !');
-        $sheet->setTitle("My First Worksheet");
-        
-        // Create your Office 2007 Excel (XLSX Format)
-        $writer = new Xlsx($spreadsheet);
-        $writer->save('hello world.xlsx');
-
-        
-
+  
         $tab = $listing->getassures();
         $nb = count($tab);
         $message = (new \Swift_Message($listing->getNom()))
@@ -201,10 +191,9 @@ class ListingController extends AbstractController
         ;
 
         $attachmentPdf = new \Swift_Attachment($pdf, $listing->getNom().".pdf", 'application/pdf');
-        $attachmentTab = new \Swift_Attachment($writer, $listing->getNom().".xlsx", 'application/pdf');
+
 
         $message->attach($attachmentPdf);
-        $message->attach($attachmentTab);
         /* Envoie du mail */
         $mailer->send($message);
         
@@ -218,54 +207,35 @@ class ListingController extends AbstractController
         ]);
     }
 
+
     /**
-     * @Route("/excel", name="excel", methods={"GET"})
+     * @Route("/{id}/excel", name="excel", methods={"GET"})
      */
-    protected function excelListing(\Swift_Mailer $mailer)
+    public function excelcrea(Listing $listing, Factory $factory)
     {
-        $spreadsheet = new Spreadsheet();
-        // Get active sheet - it is also possible to retrieve a specific sheet
+        $spreadsheet = $factory->createSpreadsheet();
+
+        $spreadsheet->getProperties()->setCreator('Surassur')
+        ->setLastModifiedBy('Surassur')
+        ->setTitle('Scan result export')
+        ->setSubject('Office 2007 XLSX Test Document')
+        ->setDescription('Export of scan results with all vulnerabilities found.')
+        ->setKeywords('office 2007 openxml php');
+
         $sheet = $spreadsheet->getActiveSheet();
-    
-        // Set cell name and merge cells
-        $sheet->setCellValue('A1', 'Browser characteristics')->mergeCells('A1:D1');
-    
-        // Set column names
-        $columnNames = [
-            'Browser',
-            'Developper',
-            'Release date',
-            'Written in',
-        ];
-        $columnLetter = 'A';
-        foreach ($columnNames as $columnName) {
-            // Allow to access AA column if needed and more
-            $columnLetter++;
-            $sheet->setCellValue($columnLetter.'2', $columnName);
-        }
-    
-        // Add data for each column
-        $columnValues = [
-            ['Google Chrome', 'Google Inc.', 'September 2, 2008', 'C++'],
-            ['Firefox', 'Mozilla Foundation', 'September 23, 2002', 'C++, JavaScript, C, HTML, Rust'],
-            ['Microsoft Edge', 'Microsoft', 'July 29, 2015', 'C++'],
-            ['Safari', 'Apple', 'January 7, 2003', 'C++, Objective-C'],
-            ['Opera', 'Opera Software', '1994', 'C++'],
-            ['Maxthon', 'Maxthon International Ltd', 'July 23, 2007', 'C++'],
-            ['Flock', 'Flock Inc.', '2005', 'C++, XML, XBL, JavaScript'],
-        ];
-    
-        $i = 3; // Beginning row for active sheet
-        foreach ($columnValues as $columnValue) {
-            $columnLetter = 'A';
-            foreach ($columnValue as $value) {
-                $columnLetter++;
-                $sheet->setCellValue($columnLetter.$i, $value);
-            }
-            $i++;
-        }
-    
-        return $spreadsheet;
+        $sheet->setTitle('Vulnerabilities');
+        $sheet->setCellValue('A1', 'List of vulnerabilities from ');
+
+        $response = $factory->createStreamedResponse($spreadsheet, 'Xls');
+
+
+        // Redirect output to a client’s web browser (Xls)
+       $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment;filename="ExportScan.xls"');
+        $response->headers->set('Cache-Control','max-age=0');
+       
+        return $response;
+ 
     }
 
           

@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use ReCaptcha\ReCaptcha;
 
 
+
 class HomeController extends AbstractController
 {
     /**
@@ -86,4 +87,6 @@ class HomeController extends AbstractController
             'contactForm' => $form->createView(),
         ]);
     }
+
+
 }

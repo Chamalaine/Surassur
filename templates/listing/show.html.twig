@@ -69,7 +69,7 @@
     <a class = "btn-info "  href="{{path('listing_envoyer', {'id': listing.id})}}">Envoyer le Listing</a>
     {% endif %}
     <br>
-    <a class = "btn-info "  href="{{ path('excel') }}">Générer tableau</a>
+    <a class = "btn-info "  href="{{ path('excel'), {'id': listing.id}) }}">Générer tableau</a>
     <br>
     <a class = "btn-info "href="{{ path('listing_edit', {'id': listing.id}) }}">Editer</a>
     <br>
