@@ -41,11 +41,6 @@ class Intermediaire implements UserInterface
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $siret;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $dateCreation;
@@ -70,25 +65,6 @@ class Intermediaire implements UserInterface
      */
     private $roles = [];
 
-    /**
-     * @ORM\Column(type="string", length=15)
-     */
-    private $numero;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $libelle;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     */
-    private $cp;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     */
-    private $ville;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -170,17 +146,7 @@ class Intermediaire implements UserInterface
         return $this;
     }
 
-    public function getSiret(): ?string
-    {
-        return $this->siret;
-    }
 
-    public function setSiret(?string $siret): self
-    {
-        $this->siret = $siret;
-
-        return $this;
-    }
 
     public function getDateCreation(): ?\DateTimeInterface
     {
@@ -311,53 +277,6 @@ class Intermediaire implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getNumero(): ?string
-    {
-        return $this->numero;
-    }
-
-    public function setNumero(string $numero): self
-    {
-        $this->numero = $numero;
-
-        return $this;
-    }
-
-    public function getLibelle(): ?string
-    {
-        return $this->libelle;
-    }
-
-    public function setLibelle(string $libelle): self
-    {
-        $this->libelle = $libelle;
-
-        return $this;
-    }
-
-    public function getCp(): ?string
-    {
-        return $this->cp;
-    }
-
-    public function setCp(string $cp): self
-    {
-        $this->cp = $cp;
-
-        return $this;
-    }
-
-    public function getVille(): ?string
-    {
-        return $this->ville;
-    }
-
-    public function setVille(string $ville): self
-    {
-        $this->ville = $ville;
-
-        return $this;
-    }
 
     /**
      * @return string

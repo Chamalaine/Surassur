@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use Dompdf\Dompdf;
 use App\Entity\Listing;
+use App\Entity\Assure;
 use App\Form\ListingType;
 use App\Entity\Souscripteur;
 use Swiftmailer\Swiftmailer;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Yectep\PhpSpreadsheetBundle\Factory;
+
 
 
 
@@ -171,7 +173,7 @@ class ListingController extends AbstractController
 
         $pdf = $dompdf->output();
   
-        $tab = $listing->getassures();
+        $tab = $listing->getAssures();
         $nb = count($tab);
         $message = (new \Swift_Message($listing->getNom()))
             /* Adresse mail d'envoi */
@@ -222,16 +224,59 @@ class ListingController extends AbstractController
         ->setDescription('Export of scan results with all vulnerabilities found.')
         ->setKeywords('office 2007 openxml php');
 
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(100);
+
+
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Vulnerabilities');
-        $sheet->setCellValue('A1', 'List of vulnerabilities from ');
+        $sheet->setTitle('Listing');
+        $sheet->setCellValue('A1', 'Nom');
+        $sheet->setCellValue('B1', 'Prenom');
+        $sheet->setCellValue('C1', 'Date de Naissance');
+        $sheet->setCellValue('D1', 'Adresse');
+        $sheet->setCellValue('E1', 'Code Postal');
+        $sheet->setCellValue('F1', 'Ville');
+        $sheet->setCellValue('G1', 'Téléphone');
+        $sheet->setCellValue('H1', 'Bénéficiaires');
+
+        $assures = $listing->getAssures();
+
+        $cell = 2;
+        foreach($assures as $assure ){
+            $sheet->setCellValue('A'.$cell, $assure->getNom());
+            $sheet->setCellValue('B'.$cell, $assure->getPrenom());
+            $sheet->setCellValue('C'.$cell, $assure->getDateNaissance());
+            $sheet->setCellValue('D'.$cell, $assure->getNumero()." ".$assure->getLibelle()." ".$assure->getComplement());
+            $sheet->setCellValue('E'.$cell, $assure->getCp());
+            $sheet->setCellValue('F'.$cell, $assure->getVille());
+            $sheet->setCellValue('G'.$cell, $assure->getTelephone());
+
+
+            $beneficiaires=$assure->getBeneficier();
+            foreach($beneficiaires as $beneficiaire){
+            $i = $beneficiaire->getPrenom()." ".$beneficiaire->getNom()." ".$beneficiaire->getRelation();
+            $info = $i . $i;
+            }
+
+            if(!empty($beneficiaires[1])){
+                $sheet->setCellValue('H'.$cell, $info);
+            }
+
+            $cell++;
+        }
 
         $response = $factory->createStreamedResponse($spreadsheet, 'Xls');
 
 
         // Redirect output to a client’s web browser (Xls)
-       $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-        $response->headers->set('Content-Disposition', 'attachment;filename="ExportScan.xls"');
+        $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', 'attachment;filename="Listing.xls"');
         $response->headers->set('Cache-Control','max-age=0');
        
         return $response;

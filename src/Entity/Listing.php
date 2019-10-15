@@ -99,12 +99,12 @@ class Listing
     /**
      * @return Collection|Assure[]
      */
-    public function getassures(): Collection
+    public function getAssures(): Collection
     {
         return $this->assures;
     }
 
-    public function addassures(Assure $assures): self
+    public function addAssures(Assure $assures): self
     {
         if (!$this->assures->contains($assures)) {
             $this->assures[] = $assures;
@@ -113,7 +113,7 @@ class Listing
         return $this;
     }
 
-    public function removeassures(Assure $assures): self
+    public function removeAssures(Assure $assures): self
     {
         if ($this->assures->contains($assures)) {
             $this->assures->removeElement($assures);

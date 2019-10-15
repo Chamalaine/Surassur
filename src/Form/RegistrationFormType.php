@@ -39,11 +39,6 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('SIRET')
-            ->add('numero')
-            ->add('libelle')
-            ->add('cp')
-            ->add('ville')
             ->add('nom')
 
         ;

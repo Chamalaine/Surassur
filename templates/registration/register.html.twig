@@ -6,14 +6,10 @@
     <h1>Inscription</h1>
 
     {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.nom) }}
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword) }}
-        {{ form_row(registrationForm.nom) }}
-        {{ form_row(registrationForm.SIRET) }}
-        {{ form_row(registrationForm.numero) }}
-        {{ form_row(registrationForm.libelle) }}
-        {{ form_row(registrationForm.ville) }}
-        {{ form_row(registrationForm.cp) }}
+
         <div class="g-recaptcha" data-sitekey="6LevPbwUAAAAAGJ4cWOe178G7FOakMH_qxX3YezP"></div>
 
 

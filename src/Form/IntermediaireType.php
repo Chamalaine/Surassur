@@ -16,11 +16,6 @@ class IntermediaireType extends AbstractType
         $builder
             ->add('email')
             ->add('nom')
-            ->add('SIRET')
-            ->add('numero')
-            ->add('libelle')
-            ->add('cp')
-            ->add('ville')
         ;
     }
 

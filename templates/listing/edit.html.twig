@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Edit Listing</h1>
 
-    {{ include('listing/_form.html.twig', {'button_label': 'Sauvegarder'}) }}
+    {{ include('listing/form.html.twig', {'button_label': 'Sauvegarder'}) }}
 
     <a href="{{ path('listing_index') }}">Retour</a>
 
-    {{ include('listing/_delete_form.html.twig') }}
+    {{ include('listing/delete_form.html.twig') }}
 {% endblock %}

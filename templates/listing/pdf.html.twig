@@ -1,8 +1,12 @@
-
-<h1> {{listing.nom}}</h2>
-<h2> Listing du : {{listing.dateEnvoi ? listing.dateEnvoi|date('d-m-Y') : ''}}</h2>
-<h2> Par {{listing.intermediaire.nom}}</h2>
-
+<head>
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ asset('asset/css/pdf.css')}}"> 
+</head>
+<div id="titre">
+<p> {{listing.nom}}</p>
+<p> Listing du : {{ listing.dateEnvoi ? listing.dateEnvoi|date('d-m-Y') : '' }}</p>
+<p> Par {{listing.intermediaire.nom}}</p>
+</div>
 <table class="table">
         <thead>
             <tr>
@@ -10,12 +14,10 @@
                 <th>Prenom</th>
                 <th>Date de Naissance</th>
                 <th>Telephone</th>
-                <th>Numero</th>
-                <th>Libelle</th>
+                <th>Adresse</th>
                 <th>Ville</th>
-                <th>Cp</th>
-                <th>Complement</th>
-                <th>Beneficiaires</th>
+                <th>Code Postal</th>
+                
 
             </tr>
         </thead>
@@ -26,17 +28,31 @@
                 <td>{{ assure.prenom }}</td>
                 <td>{{ assure.dateNaissance ? assure.dateNaissance|date('d-m-Y') : '' }}</td>
                 <td>{{ assure.telephone }}</td>
-                <td>{{ assure.numero }}</td>
-                <td>{{ assure.libelle }}</td>
+                <td>{{ assure.numero }} {{ assure.libelle }}</td>
                 <td>{{ assure.ville }}</td>
                 <td>{{ assure.cp }}</td>
-                <td>{{ assure.complement }}</td>
-                {% for beneficiaire in assure.beneficiaires %}
-                <td>{{ beneficiaire.nom}}  {{beneficiaire.prenom}}
-                    {{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('d-m-Y') : ''}} {{beneficiaire.relation}} 
-                <td>
-                {% endfor %}
             </tr>
+
+            {% if assure.beneficiaires %}
+            <tr><td colspan=7>
+                <table>
+                    <tr>
+                        <th colspan=4>Beneficiaires</th>
+                    </tr>
+                {% for beneficiaire in assure.beneficiaires %}
+
+                    <tr>
+                        <td>{{ beneficiaire.nom}}</td>
+                        <td>{{beneficiaire.prenom}}</td>
+                        <td>{{ beneficiaire.dateNaissance ? beneficiaire.dateNaissance|date('d-m-Y') : ''}}</td>
+                        <td>{{beneficiaire.relation}} </td>
+                
+                    </tr>
+                {% endfor %}
+                </table>
+            </td></tr>
+            {% endif %}
+            
         {% endfor %}
         </tbody>
     </table>

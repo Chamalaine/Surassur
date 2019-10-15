@@ -2,8 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="{{ asset('asset/css/style.css')}}"> 
+<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/litera/bootstrap.min.css" rel="stylesheet" integrity="sha384-D/7uAka7uwterkSxa2LwZR7RJqH2X6jfmhkJ0vFPGUtPyBMF2WMq9S+f9Ik5jJu1" crossorigin="anonymous">        <link rel="stylesheet" href="{{ asset('asset/css/style.css')}}"> 
         <link rel="icon" href="{{asset('asset/img/favicon.png')}}"/>
         <!-- Script -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> 
@@ -11,8 +10,7 @@
         <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script> 
         <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
         <script src='https://www.google.com/recaptcha/api.js'></script>
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
-
+        <link href="https://fonts.googleapis.com/css?family=Cantata+One|Roboto&display=swap" rel="stylesheet">
 
 
         <title>{% block title %}Surassur{% endblock %}</title>
@@ -29,7 +27,6 @@
         <a href="{{ path('souscripteur_index') }}" class="navbar-brand"style="color:#E0D564"  > Afficher Souscripteur<a>
         <a href="{{ path('listing_index') }}" class="navbar-brand" style="color:#E0D564" > Afficher Listing<a>
         <a href="{{ path('assure_index') }}" class="navbar-brand" style="color:#E0D564" > Afficher Assure<a>
-        <a href="{{ path('excel')}}">excel</a>
         <br>
         <div class="checkbox mb-3">{{ app.user.nom }}</a>
         <a href="{{ path('intermediaire_show', {'id': app.user.id})}}"> Profil</a>
